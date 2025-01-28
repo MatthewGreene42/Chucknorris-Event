@@ -1,0 +1,34 @@
+title Create a chucknorris reminder
+
+
+participant user
+participant server
+participant google calender
+participant api.chucknorris.io
+
+user->(1)server: get /
+user(1)<-server:200 OK\nbutton to submit
+user->(1)server:get /googleredirect
+note over user,google calender:Three-legged oauth google
+alt OAuth
+user(1)<-server:302 temporary redirect\nLocation:https://accounts.google.com/o/oauth2/auth\nnote: googlecredential.web contains server's user info and such\nclient_id : googlecredential.web.client_id,\nproject_id : googlecredential.web.project_id,\nauth_uri : googlecredential.web.auth_uri,\ntoken_uri : googlecredential.web.token_uri,\nauth_provider_x509_cert_url : googlecredential.web.auth_provider_x509_cert_url,\nresponse_type : 'code',\nscope : 'https://www.googleapis.com/auth/calendar',\nredirect_uri : 'http://localhost:3000/Entry/'
+user->(1)google calender:GET https://accounts.google.com/o/oauth2/auth?.....\nhostname: https://accounts.google.com/...
+user(1)<-google calender:200 OK\nlogin form?
+user->(1)google calender:User logs in.\nGoogle also gives warning about test app.
+user(1)<-google calender:200 OK\nask if you would like to grant access to account?\nfull calendar access
+user->(1)google calender:user agrees
+user(1)<-google calender:302 temporary redirect\nredirect to localhost:3000/Entry?\ncode = ....\nscope= ...calendar
+user->(1)server:get /Entry?\ncode - ...\nscope - ...calendar
+server->(1)google calender:get https://oauth2.googleapis.com/token?\n            client_id : {client ID},\n            client_secret : {client Secret},\n            code : {code from user},\n            grant_type : `authorization_code`,\n            redirect_uri : 'http://localhost:3000/Entry/'\n
+server(1)<-google calender:200 OK\ngive server authorization token on behalf of user.\ntoken_type = "Bearer"\naccess_token = {token}
+end
+note over server,google calender:get chuck noris quote, simple api
+server->(1)api.chucknorris.io:get https://api.chucknorris.io/jokes/random
+server(1)<-api.chucknorris.io:200 OK\nJson with property\n-value = my quote
+server->(1)google calender:GET https://www.googleapis.com/calendar/v3/users/me/calendarList\nAuthorization : {token}
+server(1)<-google calender:200 OK\ngive me list of calendars
+
+note over server:aquired ID of calendar\nSet event for the December 28th
+server->(1)google calender:POST https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events\ncalenderID\nresource :\n   event (contains info)\n         -start contains date\n         -end contains date\n      -description\n      -summary "Chuck Norris Says amazing things"
+server(1)<-google calender:200 OK\nreturns a body with https://developers.google.com/calendar/api/v3/reference/events#resource\nhtmlLink\n
+user(1)<-server:200 OK\nbody is text, says chuck norris event created\nLink to event on google calendar

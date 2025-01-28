@@ -1,0 +1,35 @@
+{
+    "kind": "calendar#event",
+    "etag": "\"3469679829628000\"",
+    "id": "tpq85cq0sa5jh1ojh25qt9p9bc",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=dHBxODVjcTBzYTVqaDFvamgyNXF0OXA5YmMgbWF0dGhld2dyZWVuZTAyMDRAbQ",
+    "created": "2024-12-22T03:58:34.000Z",
+    "updated": "2024-12-22T03:58:34.814Z",
+    "creator": {
+        "email": "*@gmail.com",
+        "self": true
+    },
+    "organizer": {
+        "email": "*@gmail.com",
+        "self": true
+    },
+    "start": {
+        "date": "2024-12-28"
+    },
+    "end": {
+        "date": "2024-12-29"
+    },
+    "iCalUID": "tpq85cq0sa5jh1ojh25qt9p9bc@google.com",
+    "sequence": 0,
+    "reminders": {
+        "useDefault": false,
+        "overrides": [
+            {
+                "method": "popup",
+                "minutes": 30
+            }
+        ]
+    },
+    "eventType": "default"
+}
